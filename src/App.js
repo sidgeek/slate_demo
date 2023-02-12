@@ -1,19 +1,58 @@
 import './App.css';
 // 导入 React 依赖。
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 // 导入 Slate 编辑器工厂。
 import { createEditor, Editor, Text, Transforms } from 'slate'
 // 导入 Slate 组件和 React 插件。
 import { Slate, Editable, withReact } from 'slate-react'
 
-const initialValue = [{
-  type: 'paragraph',
-  children: [{ text: 'A line of text in a paragraph.' }],
-},]
+// Define our own custom set of helpers.
+const CustomEditor = {
+  isBoldMarkActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: n => n.bold === true,
+      universal: true,
+    })
+
+    return !!match
+  },
+
+  isCodeBlockActive(editor) {
+    const [match] = Editor.nodes(editor, {
+      match: n => n.type === 'code',
+    })
+
+    return !!match
+  },
+
+  toggleBoldMark(editor) {
+    const isActive = CustomEditor.isBoldMarkActive(editor)
+    Transforms.setNodes(
+      editor,
+      { bold: isActive ? null : true },
+      { match: n => Text.isText(n), split: true }
+    )
+  },
+
+  toggleCodeBlock(editor) {
+    const isActive = CustomEditor.isCodeBlockActive(editor)
+    Transforms.setNodes(
+      editor,
+      { type: isActive ? null : 'code' },
+      { match: n => Editor.isBlock(editor, n) }
+    )
+  },
+}
 
 function App() {
   // 创建一个不会在渲染中变化的 Slate 编辑器对象。
   const editor = useMemo(() => withReact(createEditor()), [])
+  const [value, setValue] = useState([
+    {
+      type: 'paragraph',
+      children: [{ text: 'A line of text in a paragraph.' }],
+    },
+  ])
 
   const renderElement = useCallback(props => {
     switch (props.element.type) {
@@ -29,10 +68,11 @@ function App() {
     return <Leaf {...props} />
   }, [])
 
-  return <Slate editor={editor} value={initialValue}>
+
+  return <Slate editor={editor} value={value} onChange={value => setValue(value)}>
     <Editable
       renderElement={renderElement}
-      // renderLeaf={renderLeaf}
+      renderLeaf={renderLeaf}
       onKeyDown={event => {
         if (!event.ctrlKey) {
           return
@@ -42,27 +82,14 @@ function App() {
           // 当按下 "`" 时，保留我们代码块现有的逻辑
           case '`': {
             event.preventDefault()
-            const [match] = Editor.nodes(editor, {
-              match: n => n.type === 'code',
-            })
-            Transforms.setNodes(
-              editor,
-              { type: match ? 'paragraph' : 'code' },
-              { match: n => Editor.isBlock(editor, n) }
-            )
+            CustomEditor.toggleCodeBlock(editor)
             break
           }
 
           // 当按下 "B" 时，加粗所选择的文本
           case 'b': {
             event.preventDefault()
-            Transforms.setNodes(
-              editor,
-              { bold: true },
-              // 应用到文本节点上，
-              // 如果所选内容仅为文本节点的一部分，则将其拆分。
-              { match: n => Text.isText(n), split: true }
-            )
+            CustomEditor.toggleBoldMark(editor)
             break
           }
         }
