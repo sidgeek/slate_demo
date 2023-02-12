@@ -70,6 +70,24 @@ function App() {
 
 
   return <Slate editor={editor} value={value} onChange={value => setValue(value)}>
+    <div>
+      <button
+        onMouseDown={event => {
+          event.preventDefault()
+          CustomEditor.toggleBoldMark(editor)
+        }}
+      >
+        Bold
+      </button>
+      <button
+        onMouseDown={event => {
+          event.preventDefault()
+          CustomEditor.toggleCodeBlock(editor)
+        }}
+      >
+        Code Block
+      </button>
+    </div>
     <Editable
       renderElement={renderElement}
       renderLeaf={renderLeaf}
