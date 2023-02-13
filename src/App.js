@@ -5,6 +5,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { createEditor, Editor, Text, Transforms } from 'slate'
 // 导入 Slate 组件和 React 插件。
 import { Slate, Editable, withReact } from 'slate-react'
+import { ListType, withLists } from '@prezly/slate-lists';
 
 // Define our own custom set of helpers.
 const CustomEditor = {
@@ -44,18 +45,81 @@ const CustomEditor = {
   },
 }
 
+const withListsPlugin = withLists({
+  isConvertibleToListTextNode(node) {
+    return Element.isElementType(node, 'paragraph');
+  },
+  isDefaultTextNode(node) {
+    return Element.isElementType(node, 'paragraph');
+  },
+  isListNode(node, type) {
+    if (type) {
+      return Element.isElementType(node, type);
+    }
+    return (
+      Element.isElementType(node, 'ordered-list') ||
+      Element.isElementType(node, 'unordered-list')
+    );
+  },
+  isListItemNode(node) {
+    return Element.isElementType(node, 'list-item');
+  },
+  isListItemTextNode(node) {
+    return Element.isElementType(node, 'list-item-text');
+  },
+  createDefaultTextNode(props = {}) {
+    return { children: [{ text: '' }], ...props, type: 'paragraph' };
+  },
+  createListNode(type = ListType.UNORDERED, props = {}) {
+    const nodeType = type === ListType.ORDERED ? 'ordered-list' : 'unordered-list';
+    return { children: [{ text: '' }], ...props, type: nodeType };
+  },
+  createListItemNode(props = {}) {
+    return { children: [{ text: '' }], ...props, type: 'list-item' };
+  },
+  createListItemTextNode(props = {}) {
+    return { children: [{ text: '' }], ...props, type: 'list-item-text' };
+  },
+});
+
 function App() {
   // 创建一个不会在渲染中变化的 Slate 编辑器对象。
-  const editor = useMemo(() => withReact(createEditor()), [])
+  const editor = useMemo(() => withListsPlugin(withReact(createEditor())), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
       children: [{ text: 'A line of text in a paragraph.' }],
     },
+    {
+      type: 'ordered-list',
+      children: [
+        {
+          type: 'list-item',
+          children: [{ type: 'list-item-text', children: [{ text: 'One' }] }],
+        },
+        {
+          type: 'list-item',
+          children: [{ type: 'list-item-text', children: [{ text: 'Two' }] }],
+        },
+        {
+          type: 'list-item',
+          children: [{ type: 'list-item-text', children: [{ text: 'Three' }] }],
+        },
+      ],
+    },
   ])
 
   const renderElement = useCallback(props => {
-    switch (props.element.type) {
+    const { element, attributes, children } = props
+    switch (element.type) {
+      case 'ordered-list':
+        return <ol {...attributes}>{children}</ol>;
+      case 'unordered-list':
+        return <ul {...attributes}>{children}</ul>;
+      case 'list-item':
+        return <li {...attributes}>{children}</li>;
+      case 'list-item-text':
+        return <div {...attributes}>{children}</div>;
       case 'code':
         return <CodeElement {...props} />
       default:

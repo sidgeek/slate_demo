@@ -1578,6 +1578,14 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
+"@prezly/slate-lists@^0.78.0":
+  version "0.78.0"
+  resolved "https://registry.npmmirror.com/@prezly/slate-lists/-/slate-lists-0.78.0.tgz#d983874a3dcfc8cdc3e246930150a56daa4f20d5"
+  integrity sha512-5ETguU9X/Qihkpy+CLdIXQFjtGp+/YQFwqkVdr8FY9f4CgrledA8Qd+onfjzDig8QWdbS//MjMCHvSyvHqSsvQ==
+  dependencies:
+    is-hotkey "^0.2.0"
+    uuid "^8.3.0"
+
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"
   resolved "https://registry.npmmirror.com/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"
@@ -5143,6 +5151,11 @@ is-hotkey@^0.1.6:
   version "0.1.8"
   resolved "https://registry.npmmirror.com/is-hotkey/-/is-hotkey-0.1.8.tgz#6b1f4b2d0e5639934e20c05ed24d623a21d36d25"
   integrity sha512-qs3NZ1INIS+H+yeo7cD9pDfwYV/jqRh1JG9S9zYrNudkoUQg7OL7ziXqRKu+InFjUIDoP2o6HIkLYMh1pcWgyQ==
+
+is-hotkey@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmmirror.com/is-hotkey/-/is-hotkey-0.2.0.tgz#1835a68171a91e5c9460869d96336947c8340cef"
+  integrity sha512-UknnZK4RakDmTgz4PI1wIph5yxSs/mvChWs9ifnlXsKuXgWmOkY/hAE0H/k2MIqH0RlRye0i1oC07MCRSD28Mw==
 
 is-map@^2.0.1, is-map@^2.0.2:
   version "2.0.2"
@@ -8788,7 +8801,7 @@ utils-merge@1.0.1:
   resolved "https://registry.npmmirror.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
 
-uuid@^8.3.2:
+uuid@^8.3.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmmirror.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
