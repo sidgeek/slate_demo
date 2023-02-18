@@ -2,7 +2,7 @@ import './App.css';
 // 导入 React 依赖。
 import React, { useCallback, useMemo, useState } from 'react'
 // 导入 Slate 编辑器工厂。
-import { createEditor, Editor, Text, Transforms } from 'slate'
+import { createEditor, Editor, Element, Text, Transforms } from 'slate'
 // 导入 Slate 组件和 React 插件。
 import { Slate, Editable, withReact } from 'slate-react'
 import { ListType, withLists } from '@prezly/slate-lists';
